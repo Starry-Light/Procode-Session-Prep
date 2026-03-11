@@ -582,7 +582,7 @@ body {
 }
 
 .app-container:not(.welcome-active) {
-  padding-top: 180px;
+  padding-top: 200px;
 }
 
 .app-container:not(.welcome-active) .app-chrome {

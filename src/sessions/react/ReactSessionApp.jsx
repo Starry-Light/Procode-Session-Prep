@@ -9,6 +9,7 @@ import PropsTab from './tabs/PropsTab'
 import StateTab from './tabs/StateTab'
 import LogicControlTab from './tabs/LogicControlTab'
 import EffectsTab from './tabs/EffectsTab'
+import useChromePadding from '../../hooks/useChromePadding'
 
 const tabs = [
   { id: 'welcome', label: 'Welcome', component: WelcomeTab, isWelcome: true },
@@ -26,6 +27,8 @@ function ReactSessionApp() {
   const [activeTab, setActiveTab] = useState('welcome')
   const [headerVisible, setHeaderVisible] = useState(false)
   const lastScrollY = useRef(0)
+  const containerRef = useRef(null)
+  const chromeRef = useRef(null)
   const isWelcomeTab = activeTab === 'welcome'
 
   useEffect(() => {
@@ -59,6 +62,8 @@ function ReactSessionApp() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isWelcomeTab])
 
+  useChromePadding(chromeRef, containerRef, isWelcomeTab)
+
   const handleTabChange = (tabId) => {
     setActiveTab(tabId)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -74,8 +79,8 @@ function ReactSessionApp() {
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || SetupTab
 
   return (
-    <div className={`app-container ${isWelcomeTab ? 'welcome-active' : ''}`}>
-      <div className={`app-chrome ${headerVisible ? 'visible' : 'hidden'}`}>
+    <div ref={containerRef} className={`app-container ${isWelcomeTab ? 'welcome-active' : ''}`}>
+      <div ref={chromeRef} className={`app-chrome ${headerVisible ? 'visible' : 'hidden'}`}>
         <header className="app-header">
           <button className="back-to-menu-btn" onClick={() => navigate('/')}>
             ← Sessions

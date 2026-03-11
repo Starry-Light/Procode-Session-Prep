@@ -9,6 +9,7 @@ import EventDrivenTab from './tabs/EventDrivenTab'
 import ShardingReplicationTab from './tabs/ShardingReplicationTab'
 import CapAcidTab from './tabs/CapAcidTab'
 import CdnTab from './tabs/CdnTab'
+import useChromePadding from '../../hooks/useChromePadding'
 
 const tabs = [
   { id: 'welcome', label: 'Welcome', component: WelcomeTab, isWelcome: true },
@@ -26,6 +27,8 @@ function SystemDesignSessionApp() {
   const [activeTab, setActiveTab] = useState('welcome')
   const [headerVisible, setHeaderVisible] = useState(false)
   const lastScrollY = useRef(0)
+  const containerRef = useRef(null)
+  const chromeRef = useRef(null)
   const isWelcomeTab = activeTab === 'welcome'
 
   useEffect(() => {
@@ -56,6 +59,8 @@ function SystemDesignSessionApp() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isWelcomeTab])
 
+  useChromePadding(chromeRef, containerRef, isWelcomeTab)
+
   const handleTabChange = (tabId) => {
     setActiveTab(tabId)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -71,8 +76,8 @@ function SystemDesignSessionApp() {
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || SqlNoSqlTab
 
   return (
-    <div className={`app-container ${isWelcomeTab ? 'welcome-active' : ''}`}>
-      <div className={`app-chrome ${headerVisible ? 'visible' : 'hidden'}`}>
+    <div ref={containerRef} className={`app-container ${isWelcomeTab ? 'welcome-active' : ''}`}>
+      <div ref={chromeRef} className={`app-chrome ${headerVisible ? 'visible' : 'hidden'}`}>
         <header className="app-header">
           <button className="back-to-menu-btn" onClick={() => navigate('/')}>
             ← Sessions
